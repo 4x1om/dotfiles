@@ -45,7 +45,7 @@ dupe() {
 	echo "Copied $file -> $file_duped"
 }
 
-# Search in sdcv
+# Look up in sdcv
 # Dependency: apt sdcv
 see() {
 	query="$*"

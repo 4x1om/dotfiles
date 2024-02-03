@@ -9,16 +9,18 @@ case $- in
 esac
 
 # Source from ~/.bash
-if [ -f "~/.bash/aliases.sh" ]; then
-    . "~/.bash/aliases.sh"
+# Do NOT use double quotes around the paths, because ~ in double quotes
+# will not be expanded!
+if [ -f ~/.bash/.aliases ]; then
+    . ~/.bash/.aliases
 fi
 
-if [ -f "~/.bash/functions.sh" ]; then
-	. "~/.bash/functions.sh"
+if [ -f ~/.bash/.functions ]; then
+	. ~/.bash/.functions
 fi
 
-if [ -f "~/.bash/exports.sh" ]; then
-	. "~/.bash/exports.sh"
+if [ -f ~/.bash/.exports ]; then
+	. ~/.bash/.exports
 fi
 
 # don't put duplicate lines or lines starting with space in the history.

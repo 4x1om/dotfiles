@@ -2,7 +2,7 @@
 " Global settings
 "
 
-let $BASH_ENV="~/.bash_aliases" " Make sure aliases are imported, as .bashrc is not run
+" let $BASH_ENV="~/.bash_aliases" " Make sure aliases are imported, as .bashrc is not run
 
 set tabstop=4
 set shiftwidth=4
@@ -14,43 +14,56 @@ set cindent
 set cinkeys-=0#
 set indentkeys-=0#
 
-set number " Line numbers
-" set showmatch " Jump back and forth when entering closing bracket
+" Show line numbers
+set number
+" Jump back and forth when entering closing bracket
+" set showmatch
 
-filetype plugin on " NERDCommenter needs this on
+" NERDCommenter needs this on
+filetype plugin on
 
+"
 " Shortcuts
+"
 
-" Shift+HJKL -> HJKL but faster
+" Shift+HJKL: HJKL but faster
 nnoremap H 4h
 nnoremap J 4j
 nnoremap K 4k
 nnoremap L 4l
-
+" Also map for visual mode
 vnoremap H 4h
 vnoremap J 4j
 vnoremap K 4k
 vnoremap L 4l
 
-" Indenting
+" Ctrl+B: Enter visual block mode
+nnoremap <C-b> <C-v>
+
+" > <: Indenting in visual mode
 vnoremap <Tab> >
 vnoremap <S-Tab> <
 
-" Ctrl+HJKL -> Window navigation
-" nnoremap <C-h> <C-w>h
-" nnoremap <C-j> <C-w>j
-" nnoremap <C-k> <C-w>k
-" nnoremap <C-l> <C-w>l
+" Ctrl+HJKL: Window navigation
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+" Also map for terminal
+tnoremap <C-h> <C-w>h
+tnoremap <C-j> <C-w>j
+tnoremap <C-k> <C-w>k
+tnoremap <C-l> <C-w>l
 
 " Ctrl+S: Save
 nnoremap <C-s> :w<CR>
 inoremap <C-S> <Esc>:w<CR>i
 
 " Quitting
-" Q -> Quit current window
-" Shift+Q -> Quit current without saving
-" Ctrl+Q -> Quit all windows
-" Ctrl+Shift+Q -> Quit all without saving
+" Q: Quit current window
+" Shift+Q: Quit current without saving
+" Ctrl+Q: Quit all windows
+" Ctrl+Shift+Q: Quit all without saving
 nnoremap q :q<CR>
 nnoremap Q :q!<CR>
 nnoremap <C-q> :qa<CR>
@@ -63,16 +76,22 @@ inoremap <C-z> <Esc>ui
 nnoremap <C-y> <C-r>
 inoremap <C-y> <Esc><C-r>i
 
-" Resize windows
-nnoremap <C-Up> <C-w>+
-nnoremap <C-Down> <C-w>-
-nnoremap <C-Right> <C-w>>
-nnoremap <C-Left> <C-w><
-" Remap in terminals as well
-tnoremap <C-Up> <C-w>+
-tnoremap <C-Down> <C-w>-
-tnoremap <C-Right> <C-w>>
-tnoremap <C-Left> <C-w><
+" Shift+Up Down Left Right: Resize windows
+nnoremap <S-Up> <C-w>+
+nnoremap <S-Down> <C-w>-
+nnoremap <S-Right> <C-w>>
+nnoremap <S-Left> <C-w><
+" Also map for terminal
+tnoremap <S-Up> <C-w>+
+tnoremap <S-Down> <C-w>-
+tnoremap <S-Right> <C-w>>
+tnoremap <S-Left> <C-w><
+
+" Set leader key
+let mapleader = ","
+
+" ,s: Hot reload vimrc without reopening vim
+nnoremap <Leader>s :source ~/.vimrc<CR>
 
 "
 " Declare plugins with vim-plug
@@ -124,6 +143,6 @@ let g:NERDTrimTrailingWhitespace = 1
 " If there is an uncommented line within selection, then comment all lines
 let g:NERDToggleCheckAllLines = 1
 
-" Toggle comments with Ctrl+/. Have to put <C-_> here due to Vim's quirk
+" Ctrl+/: Toggle comments. Have to put <C-_> here due to Vim's quirk
 nnoremap <C-_> :call nerdcommenter#Comment('n', 'toggle')<CR>
 vnoremap <C-_> :call nerdcommenter#Comment('v', 'toggle')<CR>

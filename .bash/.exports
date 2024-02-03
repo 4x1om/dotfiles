@@ -16,7 +16,7 @@ export PATH=/usr/local/node-v20.10.0-linux-x64/bin:$PATH
 export DL=~/Downloads
 export PJ=~/Projects
 # Vim plugins
-# export VIMPLUG=~/.vim/pack/plugins/start
+export VIMPLUG=~/.vim/pack/plugins/start
 # SDCV dictionaries directory
 export SDCV=~/.stardict/dic
 
