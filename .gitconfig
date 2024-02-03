@@ -3,3 +3,10 @@
 	name = birdue
 [core]
 	editor = vim
+[init]
+	defaultBranch = main
+[alias]
+	s = status
+	a = add
+	b = branch
+	c = commit

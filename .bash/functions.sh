@@ -1,5 +1,20 @@
 #!/bin/bash
 
+# Echo path, separated by \n
+path() {
+	echo $PATH | sed "s/:/\n/g"
+}
+
+# Real directory name of symlink
+# realdir() {
+#     if [ "$#" -lt 1 ]; then
+#         echo "Usage: realdir <file>"
+#         return 1
+#     fi
+#
+#     dirname $(realpath $(command -v "$1"))
+# }
+
 # Create and go to a temporary directory.
 tmp() {
 	cd $(mktemp -d)
@@ -30,9 +45,17 @@ dupe() {
 	echo "Copied $file -> $file_duped"
 }
 
+# Search in sdcv
+# Dependency: apt sdcv
 see() {
 	query="$*"
+	# The sed command adds 4 spaces before each line
 	sdcv -n --color "$query" | sed "s/^/    /" | less -R
 }
 
-
+# Search on jisho.org
+# Dependency: npm jisho-cli
+miru() {
+	query="$*"
+	jisho-cli -c always -r "$query" | less -R
+}

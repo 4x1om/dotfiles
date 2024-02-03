@@ -8,6 +8,19 @@ case $- in
       *) return;;
 esac
 
+# Source from ~/.bash
+if [ -f "~/.bash/aliases.sh" ]; then
+    . "~/.bash/aliases.sh"
+fi
+
+if [ -f "~/.bash/functions.sh" ]; then
+	. "~/.bash/functions.sh"
+fi
+
+if [ -f "~/.bash/exports.sh" ]; then
+	. "~/.bash/exports.sh"
+fi
+
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
@@ -96,20 +109,6 @@ alias l='ls -CF'
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
-# Alias definitions.
-# You may want to put all your additions into a separate file like
-# ~/.bash_aliases, instead of adding them here directly.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
-
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
-fi
-
-# Function definitions.
-if [ -f ~/.bash_functions ]; then
-	. ~/.bash_functions
-fi
-
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
@@ -120,17 +119,4 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-
-export PATH=$PATH:/home/fuko/.local/bin
-
-# Used in WSL 2 to display graphical interfaces.
-# Src=https://stackoverflow.com/questions/43397162/show-matplotlib-plots-and-other-gui-in-ubuntu-wsl1-wsl2
-export DISPLAY=`grep -oP "(?<=nameserver ).+" /etc/resolv.conf`:0.0
-
-# Directory shorthands
-
-export DL=~/Downloads
-
-export VIMPLUG=~/.vim/pack/plugins/start
-export SDCV=~/.stardict/dic
 
