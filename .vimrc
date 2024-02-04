@@ -1,8 +1,10 @@
+" NOTE: Terminal is unable to distinguish between Ctrl+Key and Ctrl+Shift+Key 
+" as they emit the same key code. Avoid those.
+" See https://stackoverflow.com/questions/1506764/how-to-map-ctrla-and-ctrlshifta-differently
+
 "
 " Global settings
 "
-
-" let $BASH_ENV="~/.bash_aliases" " Make sure aliases are imported, as .bashrc is not run
 
 set tabstop=4
 set shiftwidth=4
@@ -26,16 +28,40 @@ filetype plugin on
 " Shortcuts
 "
 
-" Shift+HJKL: HJKL but faster
-nnoremap H 4h
-nnoremap J 4j
-nnoremap K 4k
-nnoremap L 4l
-" Also map for visual mode
-vnoremap H 4h
-vnoremap J 4j
-vnoremap K 4k
-vnoremap L 4l
+" Ctrl+S: Save
+nnoremap <C-s> :w<CR>
+inoremap <C-S> <Esc>:w<CR>i
+
+" Quitting
+" Q: Quit current window
+" Shift+Q: Quit current without saving
+" Ctrl+Q: Quit all without saving
+nnoremap q :q<CR>
+nnoremap Q :q!<CR>
+nnoremap <C-q> :qa!<CR>
+" Also map for terminal, but only quit all
+tnoremap <C-q> <C-w>N:qa!<CR>
+
+" Ctrl+Z: Undo
+nnoremap <C-z> u
+inoremap <C-z> <Esc>ui
+" Ctrl+Y: Redo
+nnoremap <C-y> <C-r>
+inoremap <C-y> <Esc><C-r>i
+
+" Visual copy/cut/paste
+" Ctrl+C: Yank into register v
+vnoremap <C-c> "vy
+" Ctrl+X: Delete into register v
+vnoremap <C-x> "vd
+" Ctrl+P: Paste from register v
+nnoremap <C-p> "vp
+vnoremap <C-p> "vp
+inoremap <C-p> <Esc>"vpa
+" Ctrl+Shift+P: Paste before from register v
+" nnoremap <C-S-p> "vP
+" vnoremap <C-S-p> "vP
+" inoremap <C-S-p> <Esc>"vPa
 
 " Ctrl+B: Enter visual block mode
 nnoremap <C-b> <C-v>
@@ -43,6 +69,16 @@ nnoremap <C-b> <C-v>
 " > <: Indenting in visual mode
 vnoremap <Tab> >
 vnoremap <S-Tab> <
+
+"
+" Navigation
+"
+
+" Shift+JK: JK but faster
+nnoremap J 4j
+nnoremap K 4k
+vnoremap J 4j
+vnoremap K 4k
 
 " Ctrl+HJKL: Window navigation
 nnoremap <C-h> <C-w>h
@@ -55,41 +91,26 @@ tnoremap <C-j> <C-w>j
 tnoremap <C-k> <C-w>k
 tnoremap <C-l> <C-w>l
 
-" Ctrl+S: Save
-nnoremap <C-s> :w<CR>
-inoremap <C-S> <Esc>:w<CR>i
-
-" Quitting
-" Q: Quit current window
-" Shift+Q: Quit current without saving
-" Ctrl+Q: Quit all windows
-" Ctrl+Shift+Q: Quit all without saving
-nnoremap q :q<CR>
-nnoremap Q :q!<CR>
-nnoremap <C-q> :qa<CR>
-nnoremap <C-S-q> :qa!<CR>
-
-" Ctrl+Z: Undo
-nnoremap <C-z> u
-inoremap <C-z> <Esc>ui
-" Ctrl+Y: Redo
-nnoremap <C-y> <C-r>
-inoremap <C-y> <Esc><C-r>i
-
-" Shift+Up Down Left Right: Resize windows
+" Shift+Left/Down/Up/Right: Resize windows
+nnoremap <S-Left> <C-w><
 nnoremap <S-Up> <C-w>+
 nnoremap <S-Down> <C-w>-
 nnoremap <S-Right> <C-w>>
-nnoremap <S-Left> <C-w><
 " Also map for terminal
+tnoremap <S-Left> <C-w><
 tnoremap <S-Up> <C-w>+
 tnoremap <S-Down> <C-w>-
 tnoremap <S-Right> <C-w>>
-tnoremap <S-Left> <C-w><
+
+"
+" Leader key related
+"
 
 " Set leader key
 let mapleader = ","
 
+" ,r: Split window to open ~/.vimrc
+nnoremap <Leader>r :vs ~/.vimrc<CR>
 " ,s: Hot reload vimrc without reopening vim
 nnoremap <Leader>s :source ~/.vimrc<CR>
 

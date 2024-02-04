@@ -7,7 +7,7 @@
 # Abort the script.
 abort() {
 	echo
-	echo Abort.
+	echo "Abort."
 	exit 1
 }
 
@@ -22,18 +22,21 @@ fi
 # abort the script instead of skipping current command.
 trap abort INT
 
-echo "Copying core dotfiles... "
+echo -n "Copying core dotfiles... "
 cp -r ./.bashrc ./.bash ./.gitconfig ./.vimrc ~/
+echo "Done."
 
 # Xmodmap and imwheel for Ubuntu.
 read -p "Copy Linux input configurations? (y/n) " response
 
 if [[ "$response" =~ ^[Yy]$ ]]; then
 	cp ./.Xmodmap ./.imwheelrc ~/
+	echo "Done."
 fi
 
 echo "Updating apt..."
 sudo apt update
+sudo apt upgrade
 
 # Download vim-plug and install plugins.
 # See https://github.com/junegunn/vim-plug/wiki/tutorial
@@ -41,7 +44,7 @@ sudo apt update
 echo "Downloading vim-plug..."
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-# Run :PlugInstall and quit
+# Enter vim, run :PlugInstall and immediately quit
 vim -c PlugInstall -c qa!
 
 # Compile YouCompleteMe. This may take a long time, so an option is offered to skip.
