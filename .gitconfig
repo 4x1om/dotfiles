@@ -10,3 +10,6 @@
 	a = add
 	b = branch
 	c = commit
+	d = diff
+[credential]
+	helper = cache --timeout 43200
