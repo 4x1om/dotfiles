@@ -10,7 +10,7 @@ set tabstop=4
 set shiftwidth=4
 set autoindent
 
-" Stop vim or NERDCommenter (not sure which) from incorrectly indenting Python
+" Stop Vim or NERDCommenter (not sure which) from incorrectly indenting Python
 " See https://unix.stackexchange.com/questions/106526/stop-vim-from-messing-up-my-indentation-on-comments
 set cindent
 set cinkeys-=0#
@@ -32,16 +32,6 @@ filetype plugin on
 nnoremap <C-s> :w<CR>
 inoremap <C-S> <Esc>:w<CR>i
 
-" Quitting
-" Q: Quit current window
-" Shift+Q: Quit current without saving
-" Ctrl+Q: Quit all without saving
-nnoremap q :q<CR>
-nnoremap Q :q!<CR>
-nnoremap <C-q> :qa!<CR>
-" Also map for terminal, but only quit all
-tnoremap <C-q> <C-w>N:qa!<CR>
-
 " Ctrl+Z: Undo
 nnoremap <C-z> u
 inoremap <C-z> <Esc>ui
@@ -49,38 +39,60 @@ inoremap <C-z> <Esc>ui
 nnoremap <C-y> <C-r>
 inoremap <C-y> <Esc><C-r>i
 
-" Visual copy/cut/paste
-" Ctrl+C: Yank into register v
-vnoremap <C-c> "vy
-" Ctrl+X: Delete into register v
-vnoremap <C-x> "vd
-" Ctrl+P: Paste from register v
-nnoremap <C-p> "vp
-vnoremap <C-p> "vp
-inoremap <C-p> <Esc>"vpa
-" Ctrl+Shift+P: Paste before from register v
-" nnoremap <C-S-p> "vP
-" vnoremap <C-S-p> "vP
-" inoremap <C-S-p> <Esc>"vPa
+" Quitting
+"
+" Q -> Quit current window, prompt when there are unsaved changes (:confirm)
+" Ctrl+Q -> Quit all windows, prompt for each changed buffer
+nnoremap q :confirm q<CR>
+nnoremap <C-q> :confirm qa<CR>
+" Also map for terminal, but only quit all. To quit just the terminal, use
+" Ctrl+D.
+tnoremap <C-q> <C-w>N:confirm qa<CR>
 
-" Ctrl+B: Enter visual block mode
-nnoremap <C-b> <C-v>
+" Copy/Pasting
+"
+" Deleted stuff shouldn't go into the clipboard. That'd be weird.
+" But Vim doesn't distinguish between delete and cut for some reason.
+" My fix: use an explicit buffer.
+"
+" Y -> Yank into buffer c (for clipboard)
+vnoremap y "cy
+" X -> Cut into buffer c (mirroring Ctrl-X in other software)
+" By default, X and D do the same thing in visual mode. I remap X and keep D
+" untouched.
+vnoremap x "cd
+" P -> Paste from buffer c.
+nnoremap p "cp
+vnoremap p "cp
+" Shift+P -> Same thing but paste before
+nnoremap P "cP
+vnoremap P "cP
+" Ctrl+P -> Paste in insert mode and terminal mode. I'd like to define
+" Ctrl+Shift+P too, but it's not recognized.
+inoremap <C-P> <Esc>"cpa
+tnoremap <C-P> <C-W>"c
+
+" Ctrl+B: Enter visual block mode. In WSL, Ctrl+V is overriden by paste.
+nnoremap <C-B> <C-V>
 
 " > <: Indenting in visual mode
 vnoremap <Tab> >
 vnoremap <S-Tab> <
 
+" Shift+T: Split a new terminal
+nnoremap T :belowright terminal<CR>
+
 "
 " Navigation
 "
 
-" Shift+JK: JK but faster
+" Shift+J/K: J/K but faster
 nnoremap J 4j
 nnoremap K 4k
 vnoremap J 4j
 vnoremap K 4k
 
-" Ctrl+HJKL: Window navigation
+" Ctrl+H/J/K/L: Window navigation
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
@@ -93,13 +105,13 @@ tnoremap <C-l> <C-w>l
 
 " Shift+Left/Down/Up/Right: Resize windows
 nnoremap <S-Left> <C-w><
-nnoremap <S-Up> <C-w>+
 nnoremap <S-Down> <C-w>-
+nnoremap <S-Up> <C-w>+
 nnoremap <S-Right> <C-w>>
 " Also map for terminal
 tnoremap <S-Left> <C-w><
-tnoremap <S-Up> <C-w>+
 tnoremap <S-Down> <C-w>-
+tnoremap <S-Up> <C-w>+
 tnoremap <S-Right> <C-w>>
 
 "
@@ -111,7 +123,7 @@ let mapleader = ","
 
 " ,r: Split window to open ~/.vimrc
 nnoremap <Leader>r :vs ~/.vimrc<CR>
-" ,s: Hot reload vimrc without reopening vim
+" ,s: Hot reload vimrc without reopening Vim
 nnoremap <Leader>s :source ~/.vimrc<CR>
 
 "
@@ -166,4 +178,5 @@ let g:NERDToggleCheckAllLines = 1
 
 " Ctrl+/: Toggle comments. Have to put <C-_> here due to Vim's quirk
 nnoremap <C-_> :call nerdcommenter#Comment('n', 'toggle')<CR>
+inoremap <C-_> <Esc>:call nerdcommenter#Comment('n', 'toggle')<CR>a
 vnoremap <C-_> :call nerdcommenter#Comment('v', 'toggle')<CR>

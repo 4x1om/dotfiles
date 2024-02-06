@@ -5,6 +5,17 @@ path() {
 	echo $PATH | sed "s/:/\n/g"
 }
 
+# cd then ls.
+# The beauty of this command is that if called without arguments, it equals a raw ls.
+cl() {
+	cd "$1" && ls
+}
+
+# cd then ls -A.
+cla() {
+	cd "$1" && ls -A
+}
+
 # Real directory name of symlink
 # realdir() {
 #     if [ "$#" -lt 1 ]; then

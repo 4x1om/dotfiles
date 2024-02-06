@@ -22,6 +22,6 @@ for file in $files; do
 		echo "Skipping ~/$file: not newer than current version"
 		continue
 	fi
-	cp ~/$file .
+	cp -p ~/$file ./$(dirname "$file")
 	echo "Updated $file"
 done
