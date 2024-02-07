@@ -56,7 +56,11 @@ tnoremap <C-q> <C-w>N:confirm qa<CR>
 " My fix: use an explicit buffer.
 "
 " Y -> Yank into buffer c (for clipboard)
+" This applies to visual mode and similar commands in normal mode.
 vnoremap y "cy
+nnoremap yy "cyy
+nnoremap yw "cyw
+nnoremap y$ "cy$
 " X -> Cut into buffer c (mirroring Ctrl-X in other software)
 " By default, X and D do the same thing in visual mode. I remap X and keep D
 " untouched.
@@ -91,17 +95,29 @@ nnoremap J 4j
 nnoremap K 4k
 vnoremap J 4j
 vnoremap K 4k
+" Shift+H/L: J/K but even faster.
+" The original uses of Shift+H/L felt pointless to me, because you couldn't
+" fast travel.
+nnoremap H <C-U>
+nnoremap L <C-D>
+vnoremap H <C-U>
+vnoremap L <C-D>
 
 " Ctrl+H/J/K/L: Window navigation
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
+nnoremap <C-H> <C-W>h
+nnoremap <C-J> <C-W>j
+nnoremap <C-K> <C-W>k
+nnoremap <C-L> <C-W>l
+" Also map for insert mode
+inoremap <C-H> <Esc><C-W>h
+inoremap <C-J> <Esc><C-W>j
+inoremap <C-K> <Esc><C-W>k
+inoremap <C-L> <Esc><C-W>l
 " Also map for terminal
-tnoremap <C-h> <C-w>h
-tnoremap <C-j> <C-w>j
-tnoremap <C-k> <C-w>k
-tnoremap <C-l> <C-w>l
+tnoremap <C-H> <C-W>h
+tnoremap <C-J> <C-W>j
+tnoremap <C-K> <C-W>k
+tnoremap <C-L> <C-W>l
 
 " Shift+Left/Down/Up/Right: Resize windows
 nnoremap <S-Left> <C-w><

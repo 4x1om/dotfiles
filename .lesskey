@@ -1,0 +1,5 @@
+#command
+
+# Shift+H and Shift+L to replace u and d for scrolling.
+H back-scroll
+L forw-scroll
