@@ -29,25 +29,25 @@ filetype plugin on
 "
 
 " Ctrl+S: Save
-nnoremap <C-s> :w<CR>
+nnoremap <C-S> :w<CR>
 inoremap <C-S> <Esc>:w<CR>i
 
 " Ctrl+Z: Undo
-nnoremap <C-z> u
-inoremap <C-z> <Esc>ui
+nnoremap <C-Z> u
+inoremap <C-Z> <Esc>ui
 " Ctrl+Y: Redo
-nnoremap <C-y> <C-r>
-inoremap <C-y> <Esc><C-r>i
+nnoremap <C-Y> <C-R>
+inoremap <C-Y> <Esc><C-R>i
 
 " Quitting
 "
 " Q -> Quit current window, prompt when there are unsaved changes (:confirm)
 " Ctrl+Q -> Quit all windows, prompt for each changed buffer
 nnoremap q :confirm q<CR>
-nnoremap <C-q> :confirm qa<CR>
+nnoremap <C-Q> :confirm qa<CR>
 " Also map for terminal, but only quit all. To quit just the terminal, use
 " Ctrl+D.
-tnoremap <C-q> <C-w>N:confirm qa<CR>
+tnoremap <C-Q> <C-W>N:confirm qa<CR>
 
 " Copy/Pasting
 "
@@ -86,6 +86,15 @@ vnoremap <S-Tab> <
 " Shift+T: Split a new terminal
 nnoremap T :belowright terminal<CR>
 
+" 
+" Terminal Commands
+"
+
+" Ctrl+W: Delete previous word. For consistency.
+tnoremap <C-W> <C-W>.
+" Ctrl+N: Go to normal mode
+tnoremap <C-N> <C-W>N
+
 "
 " Navigation
 "
@@ -108,27 +117,32 @@ nnoremap <C-H> <C-W>h
 nnoremap <C-J> <C-W>j
 nnoremap <C-K> <C-W>k
 nnoremap <C-L> <C-W>l
-" Also map for insert mode
-inoremap <C-H> <Esc><C-W>h
-inoremap <C-J> <Esc><C-W>j
-inoremap <C-K> <Esc><C-W>k
-inoremap <C-L> <Esc><C-W>l
 " Also map for terminal
 tnoremap <C-H> <C-W>h
 tnoremap <C-J> <C-W>j
 tnoremap <C-K> <C-W>k
 tnoremap <C-L> <C-W>l
+" Also map for insert mode
+inoremap <C-H> <Esc><C-W>h
+inoremap <C-J> <Esc><C-W>j
+inoremap <C-K> <Esc><C-W>k
+inoremap <C-L> <Esc><C-W>l
 
 " Shift+Left/Down/Up/Right: Resize windows
-nnoremap <S-Left> <C-w><
-nnoremap <S-Down> <C-w>-
-nnoremap <S-Up> <C-w>+
-nnoremap <S-Right> <C-w>>
+nnoremap <S-Left> <C-W><
+nnoremap <S-Down> <C-W>-
+nnoremap <S-Up> <C-W>+
+nnoremap <S-Right> <C-W>>
 " Also map for terminal
-tnoremap <S-Left> <C-w><
-tnoremap <S-Down> <C-w>-
-tnoremap <S-Up> <C-w>+
-tnoremap <S-Right> <C-w>>
+tnoremap <S-Left> <C-W><
+tnoremap <S-Down> <C-W>-
+tnoremap <S-Up> <C-W>+
+tnoremap <S-Right> <C-W>>
+" Also map for insert mode
+inoremap <S-Left> <Esc><C-W><a
+inoremap <S-Down> <Esc><C-W>-a
+inoremap <S-Up> <Esc><C-W>+a
+inoremap <S-Right> <Esc><C-W>>a
 
 "
 " Leader key related
@@ -175,7 +189,27 @@ set completeopt-=preview
 "
 
 " Start NERDTree and put the cursor back in the other window.
+" See https://github.com/preservim/nerdtree?tab=readme-ov-file#how-do-i-open-nerdtree-automatically-when-vim-starts
 autocmd VimEnter * NERDTree | wincmd p
+
+" Exit Vim if NERDTree is the only window remaining in the only tab.
+" See https://github.com/preservim/nerdtree?tab=readme-ov-file#how-can-i-close-vim-or-a-tab-automatically-when-nerdtree-is-the-last-window
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+
+" Open the existing NERDTree on each new tab.
+" See https://github.com/preservim/nerdtree?tab=readme-ov-file#can-i-have-the-same-nerdtree-on-every-tab-automatically
+autocmd BufWinEnter * if &buftype != 'quickfix' && getcmdwintype() == '' | silent NERDTreeMirror | endif
+
+" Unmap J/K
+let NERDTreeMapJumpLastChild=''
+let NERDTreeMapJumpFirstChild=''
+" Unmap Ctrl+J/K
+let NERDTreeMapJumpNextSibling=''
+let NERDTreeMapJumpPrevSibling=''
+" Unmap CD for quicker C response
+let NERDTreeMapCWD=''
+" a to toggle hidden (all)
+let NERDTreeMapToggleHidden='a'
 
 "
 " Settings for NERDCommenter

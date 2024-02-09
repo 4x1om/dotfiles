@@ -1,5 +1,13 @@
 #command
 
-# Shift+H and Shift+L to replace u and d for scrolling.
+# Shift+J/K: J/K but 4 lines at a time
+# This is accomplished by calling the forw-line action (which scrolls 1 line),
+# and then an "extra" command of 3j. A weird workaround, but I haven't found
+# anything else that works.
+# See: man lesskey | grep \"extra\" --color=never -A4
+J forw-line 3j
+K back-line 3k
+
+# Shift+H/L: J/K but half a screen at a time
 H back-scroll
 L forw-scroll
