@@ -2,6 +2,14 @@
 " as they emit the same key code. Avoid those.
 " See https://stackoverflow.com/questions/1506764/how-to-map-ctrla-and-ctrlshifta-differently
 
+" NOTE: At least on WSL, Terminal is unable to receive <A-Key>'s, and they will
+" be received as <Esc><Key>, which is indistinguishable from typing <Esc> and
+" then <Key>. To check what is sent when you press a hotkey, run `cat -n` and
+" use the interactive prompt.
+" For this reason, do NOT map <Esc> in any mode to anything lest it interfere
+" with other hotkeys using the escape sequence \e.
+" See https://vi.stackexchange.com/a/2363
+
 "
 " Global settings
 "
@@ -21,26 +29,62 @@ set number
 " Jump back and forth when entering closing bracket
 " set showmatch
 
-" NERDCommenter needs this on
-filetype plugin on
+" When splitting new windows, put them to the right and bottom.
+set splitright
+set splitbelow
+
+" 
+" Cursor appearance
+"
+
+" Reference chart of values:
+"	Ps = 0  -> blinking block.
+"	Ps = 1  -> blinking block (default).
+"	Ps = 2  -> steady block.
+"	Ps = 3  -> blinking underline.
+"	Ps = 4  -> steady underline.
+"	Ps = 5  -> blinking bar (xterm).
+"	Ps = 6  -> steady bar (xterm).
+" Change the number after the escape sequence to change the cursor.
+" See https://stackoverflow.com/a/42118416
+"
+" t_SI is for starting insert mode, and t_EI for ending insert mode.
+" See https://vimdoc.sourceforge.net/htmldoc/term.html
+let &t_SI = "\e[5 q"
+let &t_EI = "\e[1 q"
+
+" TESTING: remove the delay when pressing <Esc> to exit visual mode etc.
+" May cause conflicts with shortcuts that use the escape sequence.
+" See https://stackoverflow.com/a/15550847
+set timeoutlen=1000 ttimeoutlen=0
 
 "
 " Shortcuts
 "
 
-" Ctrl+S: Save
+" Ctrl+S -> Save
 nnoremap <C-S> :w<CR>
-inoremap <C-S> <Esc>:w<CR>i
+" inoremap <C-S> <Esc>:w<CR>i
 
-" Ctrl+Z: Undo
+" Ctrl+Z -> Undo
 nnoremap <C-Z> u
-inoremap <C-Z> <Esc>ui
-" Ctrl+Y: Redo
+inoremap <C-Z> <Esc>u
+" Ctrl+Y -> Redo
 nnoremap <C-Y> <C-R>
-inoremap <C-Y> <Esc><C-R>i
+inoremap <C-Y> <Esc><C-R>
 
+" Ctrl+A -> Select all
+" See https://vi.stackexchange.com/a/9033
+nnoremap <C-A> ggVG
+vnoremap <C-A> <Esc>ggVG
+
+" Ctrl+F -> Search
+nnoremap <C-F> /
+
+"
 " Quitting
 "
+
 " Q -> Quit current window, prompt when there are unsaved changes (:confirm)
 " Ctrl+Q -> Quit all windows, prompt for each changed buffer
 nnoremap q :confirm q<CR>
@@ -49,42 +93,62 @@ nnoremap <C-Q> :confirm qa<CR>
 " Ctrl+D.
 tnoremap <C-Q> <C-W>N:confirm qa<CR>
 
+"
 " Copy/Pasting
 "
+
 " Deleted stuff shouldn't go into the clipboard. That'd be weird.
 " But Vim doesn't distinguish between delete and cut for some reason.
-" My fix: use an explicit buffer.
-"
-" Y -> Yank into buffer c (for clipboard)
-" This applies to visual mode and similar commands in normal mode.
+" My fix: use an explicit buffer c (that stands for clipboard).
+
+" Y -> Yank in normal/visual mode
 vnoremap y "cy
 nnoremap yy "cyy
 nnoremap yw "cyw
-nnoremap y$ "cy$
-" X -> Cut into buffer c (mirroring Ctrl-X in other software)
+
+" X -> Cut in visual mode (mirroring Ctrl-X in other software)
 " By default, X and D do the same thing in visual mode. I remap X and keep D
 " untouched.
 vnoremap x "cd
-" P -> Paste from buffer c.
+
+nnoremap x <Nop>
+nnoremap xx "cdd
+nnoremap xw "cdw
+
+" Use Shift+X to delete character
+nnoremap X <Del>
+
+" P/Shift+P -> Paste in normal/visual mode
 nnoremap p "cp
 vnoremap p "cp
-" Shift+P -> Same thing but paste before
 nnoremap P "cP
 vnoremap P "cP
-" Ctrl+P -> Paste in insert mode and terminal mode. I'd like to define
-" Ctrl+Shift+P too, but it's not recognized.
+" Ctrl+P -> Paste in insert/terminal mode
 inoremap <C-P> <Esc>"cpa
 tnoremap <C-P> <C-W>"c
 
 " Ctrl+B: Enter visual block mode. In WSL, Ctrl+V is overriden by paste.
 nnoremap <C-B> <C-V>
 
-" > <: Indenting in visual mode
+" Tab/Shift+Tab -> Indent
+nnoremap <Tab> >>
+nnoremap <S-Tab> <<
 vnoremap <Tab> >
 vnoremap <S-Tab> <
 
-" Shift+T: Split a new terminal
-nnoremap T :belowright terminal<CR>
+" Open line above in insert mode (basically like opposite of Enter)
+inoremap <C-O> <C-O>O
+
+" Open a new window
+nnoremap <C-N> :vnew<CR>
+" New window below
+nnoremap <C-M> :new<CR>
+
+" Shift+T: Split a new terminal that's 1/3 the height of the current window.https://vi.stackexchange.com/a/14062
+" See `:help :ter` on the ++rows option
+" See `:help winheight`
+" See https://vi.stackexchange.com/a/14062
+nnoremap T :exec "ter ++rows=" . winheight(0)/3<CR>
 
 " 
 " Terminal Commands
@@ -92,7 +156,7 @@ nnoremap T :belowright terminal<CR>
 
 " Ctrl+W: Delete previous word. For consistency.
 tnoremap <C-W> <C-W>.
-" Ctrl+N: Go to normal mode
+" Go to normal mode
 tnoremap <C-N> <C-W>N
 
 "
@@ -107,38 +171,49 @@ vnoremap K 4k
 " Shift+H/L: J/K but even faster.
 " The original uses of Shift+H/L felt pointless to me, because you couldn't
 " fast travel.
-nnoremap H <C-U>
-nnoremap L <C-D>
-vnoremap H <C-U>
-vnoremap L <C-D>
+nnoremap H <C-D>
+nnoremap L <C-U>
+vnoremap H <C-D>
+vnoremap L <C-U>
 
 " Ctrl+H/J/K/L: Window navigation
 nnoremap <C-H> <C-W>h
 nnoremap <C-J> <C-W>j
 nnoremap <C-K> <C-W>k
 nnoremap <C-L> <C-W>l
-" Also map for terminal
+
 tnoremap <C-H> <C-W>h
 tnoremap <C-J> <C-W>j
 tnoremap <C-K> <C-W>k
 tnoremap <C-L> <C-W>l
-" Also map for insert mode
+
 inoremap <C-H> <Esc><C-W>h
 inoremap <C-J> <Esc><C-W>j
 inoremap <C-K> <Esc><C-W>k
 inoremap <C-L> <Esc><C-W>l
 
-" Shift+Left/Down/Up/Right: Resize windows
+" Tabs
+nnoremap <C-PageUp> gT
+nnoremap <C-PageDown> gt
+inoremap <C-PageUp> <Esc>gT
+inoremap <C-PageDown> <Esc>gt
+tnoremap <C-PageUp> <C-W>NgT
+tnoremap <C-PageDown> <C-W>Ngt
+
+" <Number><Tab> to go to tab
+nnoremap t :<C-U>execute "tabn " . v:count<CR>
+
+" Shift+Left/Down/Up/Right -> Resize windows
 nnoremap <S-Left> <C-W><
 nnoremap <S-Down> <C-W>-
 nnoremap <S-Up> <C-W>+
 nnoremap <S-Right> <C-W>>
-" Also map for terminal
+
 tnoremap <S-Left> <C-W><
 tnoremap <S-Down> <C-W>-
 tnoremap <S-Up> <C-W>+
 tnoremap <S-Right> <C-W>>
-" Also map for insert mode
+
 inoremap <S-Left> <Esc><C-W><a
 inoremap <S-Down> <Esc><C-W>-a
 inoremap <S-Up> <Esc><C-W>+a
@@ -151,9 +226,9 @@ inoremap <S-Right> <Esc><C-W>>a
 " Set leader key
 let mapleader = ","
 
-" ,r: Split window to open ~/.vimrc
-nnoremap <Leader>r :vs ~/.vimrc<CR>
-" ,s: Hot reload vimrc without reopening Vim
+" ,v -> Split window to open ~/.vimrc
+nnoremap <Leader>v :vs ~/.vimrc<CR>
+" ,s -> Hot re-source vimrc without reopening Vim
 nnoremap <Leader>s :source ~/.vimrc<CR>
 
 "
@@ -170,6 +245,7 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'preservim/nerdcommenter'
 Plug 'vim-airline/vim-airline'
 Plug 'ycm-core/YouCompleteMe'
+Plug 'kien/ctrlp.vim'
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
@@ -182,7 +258,7 @@ call plug#end()
 let g:ycm_auto_hover=''
 " Disable splitting window and showing documentation
 let g:ycm_disable_signature_help = 1
-set completeopt-=preview
+" set completeopt-=preview
 
 "
 " Settings for NERDTree
@@ -192,28 +268,33 @@ set completeopt-=preview
 " See https://github.com/preservim/nerdtree?tab=readme-ov-file#how-do-i-open-nerdtree-automatically-when-vim-starts
 autocmd VimEnter * NERDTree | wincmd p
 
-" Exit Vim if NERDTree is the only window remaining in the only tab.
+" Close the tab if NERDTree is the only window remaining in it.
 " See https://github.com/preservim/nerdtree?tab=readme-ov-file#how-can-i-close-vim-or-a-tab-automatically-when-nerdtree-is-the-last-window
-autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
 
 " Open the existing NERDTree on each new tab.
 " See https://github.com/preservim/nerdtree?tab=readme-ov-file#can-i-have-the-same-nerdtree-on-every-tab-automatically
 autocmd BufWinEnter * if &buftype != 'quickfix' && getcmdwintype() == '' | silent NERDTreeMirror | endif
 
 " Unmap J/K
-let NERDTreeMapJumpLastChild=''
-let NERDTreeMapJumpFirstChild=''
+let NERDTreeMapJumpLastChild = v:null
+let NERDTreeMapJumpFirstChild = v:null
 " Unmap Ctrl+J/K
-let NERDTreeMapJumpNextSibling=''
-let NERDTreeMapJumpPrevSibling=''
-" Unmap CD for quicker C response
-let NERDTreeMapCWD=''
+let NERDTreeMapJumpNextSibling = v:null
+let NERDTreeMapJumpPrevSibling = v:null
+" Unmap CD to remove lag after pressing C
+let NERDTreeMapCWD = v:null
 " a to toggle hidden (all)
-let NERDTreeMapToggleHidden='a'
+let NERDTreeMapToggleHidden = 'a'
+" Unmap A
+let NERDTreeMapToggleZoom = v:null
 
 "
 " Settings for NERDCommenter
 " 
+
+" NERDCommenter needs this on
+filetype plugin on
 
 " Add spaces after comment delimiters by default
 let g:NERDSpaceDelims = 1
@@ -230,3 +311,16 @@ let g:NERDToggleCheckAllLines = 1
 nnoremap <C-_> :call nerdcommenter#Comment('n', 'toggle')<CR>
 inoremap <C-_> <Esc>:call nerdcommenter#Comment('n', 'toggle')<CR>a
 vnoremap <C-_> :call nerdcommenter#Comment('v', 'toggle')<CR>
+
+"
+" Settings for CtrlP
+"
+
+let g:ctrlp_prompt_mappings = {
+    \ 'PrtSelectMove("t")':   [],
+    \ 'PrtSelectMove("b")':   [],
+	\ 'AcceptSelection("h")': ['<c-d>'],
+	\ 'AcceptSelection("v")': ['<c-r>', '<RightMouse>'],
+	\ 'ToggleByFname': [],
+	\ 'ToggleRegex()': [],
+	\ }

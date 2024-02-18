@@ -11,8 +11,8 @@ cl() {
 	cd "$1" && ls
 }
 
-# cd then ls -A.
-cla() {
+# cd then la.
+ca() {
 	cd "$1" && ls -A
 }
 
@@ -31,29 +31,31 @@ tmp() {
 	cd $(mktemp -d)
 }
 
-# Duplicate file.
+# Duplicate file or directory and add a counter at the end.
+# If called with 2 parameters, it's equivalent to cp -r.
 dupe() {
 	if [ "$#" -lt 1 ]; then
-		echo "Usage: dupe <file>"
+		echo "Usage: dupe <path> [<target>]"
 		return 1
 	fi
 
-	file="$1"
-	if [ ! -e "$file" ]; then
-		echo "Error: $file not found"
+	path="$1"
+	if [ ! -e "$path" ]; then
+		echo "dupe: $path not found"
 		return 1
 	fi
 
-	counter=1
-	while [ -e "${file}_$counter" ]; do
-		counter=$((counter + 1))
-	done
+	if [ "$#" -ge 2 ]; then
+		path_duped="$2"
+	else
+		counter=1
+		while [ -e "${path}_$counter" ]; do
+			counter=$((counter + 1))
+		done
+		path_duped="${path}_$counter"
+	fi
 
-	file_duped="${file}_$counter"
-
-	cp "$file" "$file_duped"
-
-	echo "Copied $file -> $file_duped"
+	cp -r "$path" "$path_duped" && echo "Duplicated $path -> $path_duped"
 }
 
 # Look up in sdcv

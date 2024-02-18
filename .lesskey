@@ -1,6 +1,6 @@
 #command
 
-# Shift+J/K: J/K but 4 lines at a time
+# Shift+J/K -> J/K but 4 lines at a time
 # This is accomplished by calling the forw-line action (which scrolls 1 line),
 # and then an "extra" command of 3j. A weird workaround, but I haven't found
 # anything else that works.
@@ -8,6 +8,9 @@
 J forw-line 3j
 K back-line 3k
 
-# Shift+H/L: J/K but half a screen at a time
-H back-scroll
-L forw-scroll
+# Shift+H/L -> J/K but half a screen at a time
+H forw-scroll
+L back-scroll
+
+# Ctrl+F -> Search
+^F forw-search
