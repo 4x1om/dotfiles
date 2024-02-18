@@ -38,9 +38,17 @@ echo "Updating apt..."
 sudo apt update
 sudo apt upgrade
 
+# Download Node.js from source.
+# See https://askubuntu.com/a/83290
+read -p "Download the latest version of Node.js? (y/n)" response
+
+if [[ "$response" =~ ^[Yy]$ ]]; then
+	curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+	sudo apt-get install -y nodejs
+fi
+
 # Download vim-plug and install plugins.
 # See https://github.com/junegunn/vim-plug/wiki/tutorial
-
 echo "Downloading vim-plug..."
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
