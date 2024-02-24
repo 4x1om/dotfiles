@@ -11,5 +11,9 @@
 	b = branch
 	c = commit
 	d = diff
+	l = log
+	sw = switch
+	ba = branch --all
+	aa = add --all
 [credential]
 	helper = cache --timeout 43200

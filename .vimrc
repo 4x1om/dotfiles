@@ -317,8 +317,8 @@ vnoremap <C-_> :call nerdcommenter#Comment('v', 'toggle')<CR>
 "
 
 let g:ctrlp_prompt_mappings = {
-    \ 'PrtSelectMove("t")':   [],
-    \ 'PrtSelectMove("b")':   [],
+	\ 'PrtSelectMove("t")':   [],
+	\ 'PrtSelectMove("b")':   [],
 	\ 'AcceptSelection("h")': ['<c-d>'],
 	\ 'AcceptSelection("v")': ['<c-r>', '<RightMouse>'],
 	\ 'ToggleByFname': [],

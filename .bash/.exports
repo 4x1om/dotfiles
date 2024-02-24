@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Server IPs
+
+
+
 # PATH 
 
 export PATH=/home/fuko/.local/bin:$PATH
@@ -20,4 +24,3 @@ export PJ=~/Projects
 export VIMPLUG=~/.vim/pack/plugins/start
 # SDCV dictionaries directory
 export SDCV=~/.stardict/dic
-

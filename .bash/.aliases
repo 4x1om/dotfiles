@@ -27,6 +27,10 @@ alias ll='ls -Al'
 # -C: List entries by columns
 alias l='ls -C'
 
+alias cp='cp -r'
+alias rm='rm -r'
+alias scp='scp -r'
+
 # -R: Allow ANSI coloring
 alias less='less -R'
 
