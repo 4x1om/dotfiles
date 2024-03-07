@@ -11,8 +11,28 @@
 " See https://vi.stackexchange.com/a/2363
 
 "
-" Global settings
+" Startup Commands
 "
+
+" Start NERDTree and put the cursor back in the other window.
+" See https://github.com/preservim/nerdtree?tab=readme-ov-file#how-do-i-open-nerdtree-automatically-when-vim-starts
+autocmd VimEnter * NERDTree | wincmd p
+
+" Open two terminals below the file, put the cursor back up
+" `++rows` sets height. See `:help winheight`.
+" `++kill=kill` makes it so that `:q` kills any running jobs in terminal
+" See `:help ++close` for help on options.
+" See https://vi.stackexchange.com/a/14062
+autocmd VimEnter * exec "ter ++kill=kill ++rows=" . winheight(0)/3 | exec "vert ter ++kill=kill" | wincmd k
+
+"
+" Global Settings
+"
+
+" Allow mouse, 'cause... why not?
+set mouse=a
+" See https://vimdoc.sourceforge.net/htmldoc/options.html#'ttymouse'
+set ttymouse=sgr
 
 set tabstop=4
 set shiftwidth=4
@@ -29,12 +49,22 @@ set number
 " Jump back and forth when entering closing bracket
 " set showmatch
 
+" Highlight search results
+set hlsearch
+" Ignore case
+set ignorecase
+
 " When splitting new windows, put them to the right and bottom.
 set splitright
 set splitbelow
 
+" Remove the delay when pressing <Esc> to exit visual mode etc.
+" May conflict with shortcuts that use the escape sequence.
+" See https://stackoverflow.com/a/15550847
+set timeoutlen=1000 ttimeoutlen=0
+
 " 
-" Cursor appearance
+" Cursor Appearance
 "
 
 " Reference chart of values:
@@ -52,112 +82,6 @@ set splitbelow
 " See https://vimdoc.sourceforge.net/htmldoc/term.html
 let &t_SI = "\e[5 q"
 let &t_EI = "\e[1 q"
-
-" TESTING: remove the delay when pressing <Esc> to exit visual mode etc.
-" May cause conflicts with shortcuts that use the escape sequence.
-" See https://stackoverflow.com/a/15550847
-set timeoutlen=1000 ttimeoutlen=0
-
-"
-" Shortcuts
-"
-
-" Ctrl+S -> Save
-nnoremap <C-S> :w<CR>
-" inoremap <C-S> <Esc>:w<CR>i
-
-" Ctrl+Z -> Undo
-nnoremap <C-Z> u
-inoremap <C-Z> <Esc>u
-" Ctrl+Y -> Redo
-nnoremap <C-Y> <C-R>
-inoremap <C-Y> <Esc><C-R>
-
-" Ctrl+A -> Select all
-" See https://vi.stackexchange.com/a/9033
-nnoremap <C-A> ggVG
-vnoremap <C-A> <Esc>ggVG
-
-" Ctrl+F -> Search
-nnoremap <C-F> /
-
-"
-" Quitting
-"
-
-" Q -> Quit current window, prompt when there are unsaved changes (:confirm)
-" Ctrl+Q -> Quit all windows, prompt for each changed buffer
-nnoremap q :confirm q<CR>
-nnoremap <C-Q> :confirm qa<CR>
-" Also map for terminal, but only quit all. To quit just the terminal, use
-" Ctrl+D.
-tnoremap <C-Q> <C-W>N:confirm qa<CR>
-
-"
-" Copy/Pasting
-"
-
-" Deleted stuff shouldn't go into the clipboard. That'd be weird.
-" But Vim doesn't distinguish between delete and cut for some reason.
-" My fix: use an explicit buffer c (that stands for clipboard).
-
-" Y -> Yank in normal/visual mode
-vnoremap y "cy
-nnoremap yy "cyy
-nnoremap yw "cyw
-
-" X -> Cut in visual mode (mirroring Ctrl-X in other software)
-" By default, X and D do the same thing in visual mode. I remap X and keep D
-" untouched.
-vnoremap x "cd
-
-nnoremap x <Nop>
-nnoremap xx "cdd
-nnoremap xw "cdw
-
-" Use Shift+X to delete character
-nnoremap X <Del>
-
-" P/Shift+P -> Paste in normal/visual mode
-nnoremap p "cp
-vnoremap p "cp
-nnoremap P "cP
-vnoremap P "cP
-" Ctrl+P -> Paste in insert/terminal mode
-inoremap <C-P> <Esc>"cpa
-tnoremap <C-P> <C-W>"c
-
-" Ctrl+B: Enter visual block mode. In WSL, Ctrl+V is overriden by paste.
-nnoremap <C-B> <C-V>
-
-" Tab/Shift+Tab -> Indent
-nnoremap <Tab> >>
-nnoremap <S-Tab> <<
-vnoremap <Tab> >
-vnoremap <S-Tab> <
-
-" Open line above in insert mode (basically like opposite of Enter)
-inoremap <C-O> <C-O>O
-
-" Open a new window
-nnoremap <C-N> :vnew<CR>
-" New window below
-nnoremap <C-M> :new<CR>
-
-" Shift+T: Split a new terminal that's 1/3 the height of the current window.https://vi.stackexchange.com/a/14062
-" See `:help :ter` on the ++rows option
-" See `:help winheight`
-" See https://vi.stackexchange.com/a/14062
-nnoremap T :exec "ter ++rows=" . winheight(0)/3<CR>
-
-" 
-" Terminal Commands
-"
-
-" Ctrl+W: Delete previous word. For consistency.
-tnoremap <C-W> <C-W>.
-" Go to normal mode
-tnoremap <C-N> <C-W>N
 
 "
 " Navigation
@@ -220,7 +144,119 @@ inoremap <S-Up> <Esc><C-W>+a
 inoremap <S-Right> <Esc><C-W>>a
 
 "
-" Leader key related
+" Shortcuts
+"
+
+" Ctrl+S -> Save
+nnoremap <C-S> :w<CR>
+" inoremap <C-S> <Esc>:w<CR>i
+
+" Ctrl+Z -> Undo
+nnoremap <C-Z> u
+inoremap <C-Z> <Esc>u
+" Ctrl+Y -> Redo
+nnoremap <C-Y> <C-R>
+inoremap <C-Y> <Esc><C-R>
+
+" Ctrl+A -> Select all
+" See https://vi.stackexchange.com/a/9033
+nnoremap <C-A> ggVG
+vnoremap <C-A> <Esc>ggVG
+
+" Ctrl+F -> Search
+nnoremap <C-F> /
+
+"
+" Quitting
+"
+
+" Q -> Quit current window, prompt when there are unsaved changes (:confirm)
+" Ctrl+Q -> Quit all windows, prompt for each changed buffer
+nnoremap q :confirm q<CR>
+nnoremap <C-Q> :confirm qa<CR>
+" Also map for terminal, but only quit all. To quit just the terminal, use
+" Ctrl+D.
+tnoremap <C-Q> <C-W>N:confirm qa<CR>
+
+"
+" Copy/pasting
+"
+
+" Deleted stuff shouldn't go into the clipboard. That'd be weird.
+" But Vim doesn't distinguish between delete and cut for some reason.
+" My fix: use an explicit buffer c (that stands for clipboard).
+
+" Y -> Yank in normal/visual mode
+vnoremap y "cy
+
+nnoremap yw "cyw
+nnoremap yy "cyy
+nnoremap y$ "cy$
+
+" X -> Cut in visual mode (mirroring Ctrl-X in other software)
+" By default, X and D do the same thing in visual mode. I remap X and keep D
+" untouched.
+vnoremap x "cd
+
+nnoremap x <Nop>
+nnoremap xw "cdw
+nnoremap xx "cdd
+nnoremap x$ "cd$
+
+" Use Shift+X to delete character
+nnoremap X <Del>
+
+" P/Shift+P -> Paste in normal/visual mode
+nnoremap p "cp
+vnoremap p "cp
+nnoremap P "cP
+vnoremap P "cP
+" Ctrl+P -> Paste in insert/terminal mode
+inoremap <C-P> <Esc>"cpa
+tnoremap <C-P> <C-W>"c
+
+" Other stuff
+
+" Ctrl+Backspace -> Delete previous word in insert mode. Wait, why is it C-H?
+" That's just how it works, I have zero idea!
+inoremap <C-H> <C-W>
+
+" Ctrl+B -> Enter visual block mode. In WSL, Ctrl+V is overriden by paste.
+nnoremap <C-B> <C-V>
+
+" Tab/Shift+Tab -> Indent
+nnoremap <Tab> >>
+nnoremap <S-Tab> <<
+" When indenting in visual mode, you lose your selection by default.
+" Here we use `gv` to select previous area and move our cursor. See `:h gv`
+vnoremap <Tab> >gvl
+vnoremap <S-Tab> <gvh
+
+" Open line above in insert mode (basically like opposite of Enter)
+inoremap <C-O> <C-O>O
+
+" Open a new window
+nnoremap <C-R> :vnew<CR>
+" New window below
+nnoremap <C-D> :new<CR>
+
+" Shift+T: Split a new terminal that's 1/3 the height of the current window.https://vi.stackexchange.com/a/14062
+" See `:help :ter` on the ++rows option
+" See `:help winheight`
+" See https://vi.stackexchange.com/a/14062
+" nnoremap T :exec "ter ++rows=" . winheight(0)/3<CR>
+
+" 
+" Terminal Commands
+"
+
+" Ctrl+W: Delete previous word. For consistency.
+tnoremap <C-W> <C-W>.
+" Go to normal mode
+tnoremap <C-N> <C-W>N
+
+"
+" Leader Key Related
 "
 
 " Set leader key
@@ -255,18 +291,16 @@ call plug#end()
 "
 
 " Disable automatic documentation popup at cursor position
-let g:ycm_auto_hover=''
+" let g:ycm_auto_hover=''
 " Disable splitting window and showing documentation
-let g:ycm_disable_signature_help = 1
-" set completeopt-=preview
+" let g:ycm_disable_signature_help = 1
+set completeopt-=preview
 
 "
 " Settings for NERDTree
 "
 
-" Start NERDTree and put the cursor back in the other window.
-" See https://github.com/preservim/nerdtree?tab=readme-ov-file#how-do-i-open-nerdtree-automatically-when-vim-starts
-autocmd VimEnter * NERDTree | wincmd p
+let g:NERDTreeWinSize = winwidth(0)/8
 
 " Close the tab if NERDTree is the only window remaining in it.
 " See https://github.com/preservim/nerdtree?tab=readme-ov-file#how-can-i-close-vim-or-a-tab-automatically-when-nerdtree-is-the-last-window

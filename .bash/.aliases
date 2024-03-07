@@ -17,6 +17,9 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
+# -R: Allow ANSI coloring
+alias less='less -R'
+
 # colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
@@ -28,11 +31,12 @@ alias ll='ls -Al'
 alias l='ls -C'
 
 alias cp='cp -r'
-alias rm='rm -r'
 alias scp='scp -r'
 
-# -R: Allow ANSI coloring
-alias less='less -R'
+alias rm='trash-put'
+alias bin='trash-list'
+alias restore='trash-restore'
+alias empty='trash-empty'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert

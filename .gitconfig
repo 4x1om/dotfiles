@@ -15,5 +15,6 @@
 	sw = switch
 	ba = branch --all
 	aa = add --all
+	nb = switch -c
 [credential]
 	helper = cache --timeout 43200

@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# Server IPs
-
-
-
 # PATH 
 
 export PATH=/home/fuko/.local/bin:$PATH
