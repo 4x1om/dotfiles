@@ -12,7 +12,7 @@ cl() {
 }
 
 # cd then la.
-cla() {
+ca() {
 	cd "$1" && ls -A
 }
 

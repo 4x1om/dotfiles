@@ -10,19 +10,46 @@ abort() {
 # abort the script instead of skipping current command.
 trap abort INT
 
-copy_dotfiles() {
-	echo -n "Copying core dotfiles... "
-	cp -r ./.bashrc ./.bash ./.gitconfig ./.vimrc ~/
-	echo "Done."
+# Create symlinks from array of filepaths, at ~
+make_symlinks() {
+	
+	files=("$@")
+	for file in "${files[@]}"; do
+		target=$(realpath "$file")
+		echo TARGET BE LIKE $target
+		# -f: [f]orce remove destination file if exists
+		ln -sf "$target" ~
+	done
 
-	# Xmodmap and imwheel for Ubuntu.
-	read -p "Copy Linux input configurations? (y/n) " response
+}
+
+symlinks() {
+
+	core=(
+		.bashrc
+		.aliases
+		.exports
+		.bash_functions
+		.bash_logout
+		.vimrc
+		.gitconfig
+		.lesskey
+	)
+
+	make_symlinks "${core[@]}"
+
+	linux=(
+		.Xmodmap
+		.imwheelrc
+	)
+
+	read -p "Set up Linux input configurations? (y/n) " response
 
 	# Accept Y/y
 	if [[ "$response" =~ ^[Yy]$ ]]; then
-		cp ./.Xmodmap ./.imwheelrc ~/
-		echo "Done."
+		make_symlinks "${linux[@]}"
 	fi
+
 }
 
 setup() {
@@ -69,18 +96,18 @@ setup() {
 	fi
 }
 
-echo "Enter a number."
-echo "1: Use dotfiles in this repo to replace dotfiles on this machine"
-echo "2: Run first-time setup on this machine"
-echo "Anything else: Do nothing"
+echo "Dotfiles management."
+echo "1: Set up only symlinks (This removes all dotfiles on the current machine. Irreversible!)"
+echo "2: Set up entire development environment"
+echo "Anything else: Abort"
 read -p "Your choice (1/2): " response
 
 case $response in
 	1)
-		copy_dotfiles
+		symlinks
 		;;
 	2)
-		copy_dotfiles
+		symlinks
 		setup
 		;;
 	*)

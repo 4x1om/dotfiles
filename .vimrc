@@ -235,10 +235,12 @@ vnoremap <S-Tab> <gvh
 " Open line above in insert mode (basically like opposite of Enter)
 inoremap <C-O> <C-O>O
 
+" Open in current window
+nnoremap <C-O> :edit 
 " Open a new window
-nnoremap <C-R> :vnew<CR>
+nnoremap <C-R> :vnew 
 " New window below
-nnoremap <C-D> :new<CR>
+nnoremap <C-D> :new 
 
 " Shift+T: Split a new terminal that's 1/3 the height of the current window.https://vi.stackexchange.com/a/14062
 " See `:help :ter` on the ++rows option
@@ -300,6 +302,7 @@ set completeopt-=preview
 " Settings for NERDTree
 "
 
+let NERDTreeShowHidden = 1
 let g:NERDTreeWinSize = winwidth(0)/8
 
 " Close the tab if NERDTree is the only window remaining in it.
@@ -310,6 +313,10 @@ autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTa
 " See https://github.com/preservim/nerdtree?tab=readme-ov-file#can-i-have-the-same-nerdtree-on-every-tab-automatically
 autocmd BufWinEnter * if &buftype != 'quickfix' && getcmdwintype() == '' | silent NERDTreeMirror | endif
 
+let NERDTreeMapOpenVSplit = '<C-R>'
+let NERDTreeMapOpenSplit = '<C-D>'
+let NERDTreeMapRefresh = v:null
+let NERDTreeMapRefreshRoot = 'r'
 " Unmap J/K
 let NERDTreeMapJumpLastChild = v:null
 let NERDTreeMapJumpFirstChild = v:null
