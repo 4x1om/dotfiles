@@ -33,6 +33,8 @@ alias l='ls -C'
 alias cp='cp -r'
 alias scp='scp -r'
 
+alias tunnel3000='ssh -o ServerAliveInterval=60 -L 3000:localhost:3000'
+
 alias rm='trash-put'
 alias bin='trash-list'
 alias restore='trash-restore'

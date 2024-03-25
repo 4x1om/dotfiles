@@ -34,8 +34,8 @@ set mouse=a
 " See https://vimdoc.sourceforge.net/htmldoc/options.html#'ttymouse'
 set ttymouse=sgr
 
-set tabstop=4
-set shiftwidth=4
+set tabstop=3
+set shiftwidth=3
 set autoindent
 
 " Stop Vim or NERDCommenter (not sure which) from incorrectly indenting Python
