@@ -18,13 +18,6 @@
 " See https://github.com/preservim/nerdtree?tab=readme-ov-file#how-do-i-open-nerdtree-automatically-when-vim-starts
 autocmd VimEnter * NERDTree | wincmd p
 
-" Open two terminals below the file, put the cursor back up
-" `++rows` sets height. See `:help winheight`.
-" `++kill=kill` makes it so that `:q` kills any running jobs in terminal
-" See `:help ++close` for help on options.
-" See https://vi.stackexchange.com/a/14062
-autocmd VimEnter * exec "ter ++kill=kill ++rows=" . winheight(0)/3 | exec "vert ter ++kill=kill" | wincmd k
-
 "
 " Global Settings
 "
@@ -242,11 +235,16 @@ nnoremap <C-R> :vnew
 " New window below
 nnoremap <C-D> :new 
 
-" Shift+T: Split a new terminal that's 1/3 the height of the current window.https://vi.stackexchange.com/a/14062
-" See `:help :ter` on the ++rows option
-" See `:help winheight`
+" Open two terminals below the file, put the cursor back up
+" `++rows` sets height. See `:help winheight`.
+" `++kill=kill` makes it so that `:q` kills any running jobs in terminal
+" See `:help ++close` for help on options.
 " See https://vi.stackexchange.com/a/14062
-" nnoremap T :exec "ter ++rows=" . winheight(0)/3<CR>
+function! OpenTwoTerminals()
+	exec "ter ++kill=kill ++rows=" . winheight(0)/3 | exec "vert ter ++kill=kill" | wincmd k
+endfunction
+
+nnoremap T :call OpenTwoTerminals()<CR>
 
 " 
 " Terminal Commands

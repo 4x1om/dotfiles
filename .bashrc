@@ -11,16 +11,16 @@ esac
 # Source from ~/.bash
 # Do NOT use double quotes around the paths, because ~ in double quotes
 # will not be expanded!
-if [ -f .aliases ]; then
-    . .aliases
+if [ -f ~/.aliases ]; then
+    . ~/.aliases
 fi
 
-if [ -f .bash_functions ]; then
-	. .bash_functions
+if [ -f ~/.bash_functions ]; then
+	. ~/.bash_functions
 fi
 
-if [ -f .exports ]; then
-	. .exports
+if [ -f ~/.exports ]; then
+	. ~/.exports
 fi
 
 # don't put duplicate lines or lines starting with space in the history.

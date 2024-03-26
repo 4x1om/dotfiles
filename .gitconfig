@@ -17,5 +17,6 @@
 	aa = add --all
 	nb = switch -c
 	rb = branch -d
+	g = log --all --oneline --graph
 [credential]
 	helper = cache --timeout 43200
