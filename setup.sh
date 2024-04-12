@@ -12,19 +12,15 @@ trap abort INT
 
 # Create symlinks from array of filepaths, at ~
 make_symlinks() {
-	
 	files=("$@")
 	for file in "${files[@]}"; do
 		target=$(realpath "$file")
-		echo TARGET BE LIKE $target
 		# -f: [f]orce remove destination file if exists
 		ln -sf "$target" ~
 	done
-
 }
 
-symlinks() {
-
+without_sudo() {
 	core=(
 		.bashrc
 		.aliases
@@ -36,6 +32,7 @@ symlinks() {
 		.lesskey
 	)
 
+	echo "Copying core dotfiles..."
 	make_symlinks "${core[@]}"
 
 	linux=(
@@ -43,43 +40,42 @@ symlinks() {
 		.imwheelrc
 	)
 
-	read -p "Set up Linux input configurations? (y/n) " response
-
-	# Accept Y/y
+	read -p "Copy Linux input configuration dotfiles? (y/n) " response
 	if [[ "$response" =~ ^[Yy]$ ]]; then
 		make_symlinks "${linux[@]}"
 	fi
-
 }
 
-setup() {
-	echo "Updating apt..."
-	sudo apt update && sudo apt upgrade -y
+with_sudo() {
+	read -p "Upgrade apt? (y/n) " response
+	if [[ "$response" =~ ^[Yy]$ ]]; then
+		sudo apt update && sudo apt upgrade -y
+	fi
 
 	# Download Node.js from source.
 	# See https://askubuntu.com/a/83290
-	read -p "Download the latest version of Node.js? (y/n)" response
+	read -p "Download the latest version of Node.js? (y/n) " response
 
 	if [[ "$response" =~ ^[Yy]$ ]]; then
 		curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 		sudo apt-get install -y nodejs
 	fi
 
-	# Download vim-plug and install plugins.
-	# See https://github.com/junegunn/vim-plug/wiki/tutorial
-	echo "Downloading vim-plug..."
-	curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-		https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-	# Enter vim, run :PlugInstall and immediately quit
-	vim -c PlugInstall -c qa!
+	read -p "Download vim-plug? (y/n) " response
+	if [[ "$response" =~ ^[Yy]$ ]]; then
+		# Download vim-plug and install plugins.
+		# See https://github.com/junegunn/vim-plug/wiki/tutorial
+		curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+			https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+		# Enter vim, run :PlugInstall and immediately quit
+		vim -c PlugInstall -c qa!
+	fi
 
 	# Compile YouCompleteMe. This may take a long time, so an option is offered to skip.
 	# See https://github.com/ycm-core/YouCompleteMe/blob/master/README.md#linux-64-bit
-	read -p "Compile YouCompleteMe automatically? (y/n) " response
+	read -p "Compile YouCompleteMe now? (y/n) " response
 
 	if [[ "$response" =~ ^[Yy]$ ]]; then
-		echo "Setting up YouCompleteMe..."
-
 		# Install CMake, Vim and Python
 		sudo apt install build-essential cmake vim-nox python3-dev
 
@@ -96,24 +92,23 @@ setup() {
 	fi
 }
 
-echo "Dotfiles management."
-echo "1: Set up only symlinks (This removes all dotfiles on the current machine. Irreversible!)"
-echo "2: Set up entire development environment"
-echo "Anything else: Abort"
-read -p "Your choice (1/2): " response
+echo "This script will make irreversible changes to this machine. Enter your action:"
+echo "su: Set up dev environment assuming you have sudo privileges."
+echo "dev: Set up dev environment without sudo privileges."
+read -p "Your choice: " response
 
 case $response in
-	1)
-		symlinks
+	dev)
+		without_sudo
 		;;
-	2)
-		symlinks
-		setup
+	su)
+		without_sudo
+		with_sudo
 		;;
 	*)
 		abort
 		;;
 esac
 
-echo "Completed."
+echo "Setup complete."
 exit 0

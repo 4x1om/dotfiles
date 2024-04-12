@@ -244,7 +244,7 @@ function! OpenTwoTerminals()
 	exec "ter ++kill=kill ++rows=" . winheight(0)/3 | exec "vert ter ++kill=kill" | wincmd k
 endfunction
 
-nnoremap T :call OpenTwoTerminals()<CR>
+nnoremap T :exec "ter ++kill=kill ++rows=" . winheight(0)/3<CR>
 
 " 
 " Terminal Commands
