@@ -47,15 +47,26 @@ without_sudo() {
 }
 
 with_sudo() {
+	sudo apt update
+
 	read -p "Upgrade apt? (y/n) " response
 	if [[ "$response" =~ ^[Yy]$ ]]; then
-		sudo apt update && sudo apt upgrade -y
+		sudo apt upgrade -y
+	fi
+
+	base=(
+		neofetch
+		trash-cli
+	)
+
+	read -p "Install a basic set of apt programs? (y/n) " response
+	if [[ "$response" =~ ^[Yy]$ ]]; then
+		sudo apt install -y ${base[@]}
 	fi
 
 	# Download Node.js from source.
 	# See https://askubuntu.com/a/83290
 	read -p "Download the latest version of Node.js? (y/n) " response
-
 	if [[ "$response" =~ ^[Yy]$ ]]; then
 		curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 		sudo apt-get install -y nodejs
@@ -74,7 +85,6 @@ with_sudo() {
 	# Compile YouCompleteMe. This may take a long time, so an option is offered to skip.
 	# See https://github.com/ycm-core/YouCompleteMe/blob/master/README.md#linux-64-bit
 	read -p "Compile YouCompleteMe now? (y/n) " response
-
 	if [[ "$response" =~ ^[Yy]$ ]]; then
 		# Install CMake, Vim and Python
 		sudo apt install build-essential cmake vim-nox python3-dev
@@ -88,17 +98,18 @@ with_sudo() {
 		# Compile YCM
 		echo "Compiling YouCompleteMe..."
 		cd ~/.vim/plugged/YouCompleteMe
-		python3 install.py --all
+		# --force-sudo because YCM compilation normally disallows sudo mode
+		python3 install.py --all --force-sudo
 	fi
 }
 
 echo "This script will make irreversible changes to this machine. Enter your action:"
 echo "su: Set up dev environment assuming you have sudo privileges."
-echo "dev: Set up dev environment without sudo privileges."
+echo "no: Set up dev environment without sudo privileges."
 read -p "Your choice: " response
 
 case $response in
-	dev)
+	no)
 		without_sudo
 		;;
 	su)

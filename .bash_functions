@@ -58,6 +58,20 @@ dupe() {
 	cp -r "$path" "$path_duped" && echo "Duplicated $path -> $path_duped"
 }
 
+# trash-cli aliases
+bin() {
+	if [ "$1" == "list" ]; then
+		trash-list
+	elif [ "$1" == "empty" ]; then
+		trash-empty
+	elif [ "$1" == "restore"]; then
+		trash-restore "$2"
+	else
+		echo "Command not recognized"
+		return 1
+	fi
+}
+
 # Look up in sdcv
 # Dependency: apt sdcv
 see() {

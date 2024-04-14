@@ -282,6 +282,10 @@ Plug 'preservim/nerdcommenter'
 Plug 'vim-airline/vim-airline'
 Plug 'ycm-core/YouCompleteMe'
 Plug 'kien/ctrlp.vim'
+" post install (yarn install | npm install) then load plugin only for editing supported files
+Plug 'prettier/vim-prettier', {
+  \ 'do': 'yarn install --frozen-lockfile --production',
+  \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'svelte', 'yaml', 'html'] }
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
@@ -363,3 +367,12 @@ let g:ctrlp_prompt_mappings = {
 	\ 'ToggleByFname': [],
 	\ 'ToggleRegex()': [],
 	\ }
+
+"
+" Settings for prettier
+"
+
+" Automatically format JS etc files on save.
+" See: https://github.com/prettier/vim-prettier?tab=readme-ov-file#configuration
+let g:prettier#autoformat = 1
+let g:prettier#autoformat_require_pragma = 0
