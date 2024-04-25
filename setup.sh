@@ -23,6 +23,7 @@ make_symlinks() {
 without_sudo() {
 	core=(
 		.bashrc
+		.inputrc
 		.aliases
 		.exports
 		.bash_functions

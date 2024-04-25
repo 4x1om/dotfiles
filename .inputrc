@@ -1,0 +1,6 @@
+# First include the original /etc/inputrc so it won't get overriden
+$include /etc/inputrc
+
+# Enable case-insensitive tab completion
+# See https://askubuntu.com/a/87066
+set completion-ignore-case On

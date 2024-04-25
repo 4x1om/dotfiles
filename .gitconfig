@@ -20,5 +20,6 @@
 	g = log --all --oneline --graph
 	co = checkout
 	cm = commit -m
+	ds = diff --staged
 [credential]
 	helper = cache --timeout 43200
