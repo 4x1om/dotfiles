@@ -1,12 +1,14 @@
 #!/bin/bash
 
-# PATH 
+# Path 
 
-export PATH=/home/fuko/.local/bin:$PATH
 # This is for pip global packages I think?
 export PATH=/home/fuko/.local/bin:$PATH
 # This is npm's global binary directory
 export PATH=/usr/local/node-v20.10.0-linux-x64/bin:$PATH
+
+# colored GCC warnings and errors
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # Used in WSL 2 to display graphical interfaces.
 # Src=https://stackoverflow.com/questions/43397162/show-matplotlib-plots-and-other-gui-in-ubuntu-wsl1-wsl2
@@ -14,8 +16,8 @@ export PATH=/usr/local/node-v20.10.0-linux-x64/bin:$PATH
 
 # Directory shorthands
 
-export DL=~/Downloads
-export PJ=~/Projects
+# export DL=~/Downloads
+# export PJ=~/Projects
 # Vim plugins
 export VIMPLUG=~/.vim/pack/plugins/start
 # SDCV dictionaries directory

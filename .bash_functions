@@ -1,30 +1,19 @@
 #!/bin/bash
 
-# Echo path, separated by \n
+# Echo $PATH, separated by \n
 path() {
 	echo $PATH | sed "s/:/\n/g"
 }
 
-# cd then ls.
-# The beauty of this command is that if called without arguments, it equals a raw ls.
+# `cd` then `ls`. If called without arguments, it equals a raw `ls`.
 cl() {
 	cd "$1" && ls
 }
 
-# cd then la.
+# `cd` then `la`.
 ca() {
 	cd "$1" && ls -A
 }
-
-# Real directory name of symlink
-# realdir() {
-#     if [ "$#" -lt 1 ]; then
-#         echo "Usage: realdir <file>"
-#         return 1
-#     fi
-#
-#     dirname $(realpath $(command -v "$1"))
-# }
 
 # Create and go to a temporary directory.
 tmp() {
@@ -58,26 +47,21 @@ dupe() {
 	cp -r "$path" "$path_duped" && echo "Duplicated $path -> $path_duped"
 }
 
-# trash-cli aliases
-bin() {
-	if [ "$1" == "list" ]; then
-		trash-list
-	elif [ "$1" == "empty" ]; then
-		trash-empty
-	elif [ "$1" == "restore"]; then
-		trash-restore "$2"
-	else
-		echo "Command not recognized"
-		return 1
-	fi
-}
-
 # Look up in sdcv
 # Dependency: apt sdcv
 see() {
 	query="$*"
 	# The sed command adds 4 spaces before each line
-	sdcv -n --color "$query" | sed "s/^/    /" | less -R
+	sdcv -n --color "$query" -u "Webster's Revised Unabridged Dictionary (1913)" \
+		-u "Collins Cobuild English Dictionary" \
+		-u "WordNet" | sed "s/^/    /" | less -R
+}
+
+# Check synonyms
+syn() {
+	query="$*"
+	# The sed command adds 4 spaces before each line
+	sdcv -n --color "$query" -u "Moby Thesaurus II" | sed "s/^/    /" | less -R
 }
 
 # Search on jisho.org

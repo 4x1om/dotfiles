@@ -24,9 +24,6 @@ fi
 # -R: Allow ANSI coloring
 alias less='less -R'
 
-# colored GCC warnings and errors
-#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
-
 # -A: List all (hidden files)
 alias la='ls -A'
 # -l: Long listing format
@@ -37,19 +34,22 @@ alias l='ls -C'
 alias cp='cp -r'
 alias rm='rm -r'
 
+# trash-cli aliases
+
+# "relocate"
+alias rl='trash-put'
+# "recover"
+alias rc='trash-restore'
+alias list='trash-list'
+alias empty='trash-empty'
+
 # ssh commands
 alias scp='scp -r'
 alias tunnel3000='ssh -o ServerAliveInterval=60 -L 3000:localhost:3000'
 
-# trash-cli
-# alias tra='trash-put'
-# alias bshow='trash-list'
-# alias restore='trash-restore'
-# alias bempty='trash-empty'
-
 # python commands
-alias python=python3
-alias p3=python3
+alias python='python3'
+alias p3='python3'
 alias p3i="python3 -i"
 
 # Usage: echo plaintext | rot13

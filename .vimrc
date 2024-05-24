@@ -208,6 +208,12 @@ vnoremap P "cP
 inoremap <C-P> <Esc>"cpa
 tnoremap <C-P> <C-W>"c
 
+" Ctrl+C -> Copy to clipboard when on WSL.
+" This command is glitchy and appears that it can only operate on full lines.
+" See https://stackoverflow.com/a/68317739
+" vnoremap <C-C> :w !clip.exe<CR>
+vnoremap <C-C> :<C-U>silent'<,'>w !clip.exe<CR>
+
 " Other stuff
 
 " Ctrl+Backspace -> Delete previous word in insert mode. Wait, why is it C-H?
@@ -286,9 +292,16 @@ Plug 'kien/ctrlp.vim'
 Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install --frozen-lockfile --production',
   \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'svelte', 'yaml', 'html'] }
+Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
+
+"
+" Color schemes
+"
+
+colorscheme catppuccin-mocha
 
 "
 " Settings for YouCompleteMe
