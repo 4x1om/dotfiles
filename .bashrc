@@ -98,4 +98,7 @@ if ! shopt -oq posix; then
   fi
 fi
 
-. "$HOME/.cargo/env"
+# Source rust dotfile only if cargo is installed
+if command -v cargo >/dev/null 2>&1; then
+	. "$HOME/.cargo/env"
+fi
