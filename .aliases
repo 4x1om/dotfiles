@@ -32,16 +32,18 @@ alias ll='ls -Al'
 alias l='ls -C'
 
 alias cp='cp -r'
-alias rm='rm -r'
 
-# trash-cli aliases
-
-# "relocate"
-alias rl='trash-put'
-# "recover"
-alias rc='trash-restore'
-alias list='trash-list'
-alias empty='trash-empty'
+# trash-cli
+if command -v trash-put >/dev/null 2&>1; then
+	echo '`rm` has been reassigned to `trash-put`.'
+	alias rm="trash-put"
+	# "recover"
+	alias rc='trash-restore'
+	alias list='trash-list'
+	alias empty='trash-empty'
+else
+	alias rm='rm -r'
+fi
 
 # ssh commands
 alias scp='scp -r'
