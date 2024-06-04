@@ -34,7 +34,7 @@ alias l='ls -C'
 alias cp='cp -r'
 
 # trash-cli
-if command -v trash-put >/dev/null 2&>1; then
+if command -v trash-put >/dev/null 2>&1; then
 	echo '`rm` has been reassigned to `trash-put`.'
 	alias rm="trash-put"
 	# "recover"

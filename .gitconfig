@@ -21,5 +21,6 @@
 	co = checkout
 	cm = commit -m
 	ds = diff --staged
+	sub = restore --staged
 [credential]
 	helper = cache --timeout 43200
