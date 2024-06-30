@@ -16,11 +16,14 @@
 	ba = branch --all
 	aa = add --all
 	nb = switch -c
-	rb = branch -d
 	g = log --all --oneline --graph
 	co = checkout
 	cm = commit -m
 	ds = diff --staged
 	sub = restore --staged
+	rs = checkout HEAD --
+	m = merge
+	rmb = branch -d
+	mvb = branch -m
 [credential]
 	helper = cache --timeout 43200
