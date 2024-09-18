@@ -10,6 +10,11 @@ cl() {
 	cd "$1" && ls
 }
 
+# `mkdir` then `cl`.
+mkcl() {
+	mkdir "$1" && ls "$1"
+}
+
 # `cd` then `la`.
 ca() {
 	cd "$1" && ls -A

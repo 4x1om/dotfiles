@@ -1,6 +1,6 @@
 [user]
-	email = birduedev@gmail.com
-	name = birdue
+	email = axiom@bu.edu
+	name = Alan Xi
 [core]
 	editor = vim
 [init]
@@ -25,5 +25,7 @@
 	m = merge
 	rmb = branch -d
 	mvb = branch -m
+	cl = clone
+	ls = config --list
 [credential]
 	helper = cache --timeout 43200
