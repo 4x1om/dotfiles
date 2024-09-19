@@ -34,9 +34,6 @@ setup_dotfiles() {
 	core=(
 		.bashrc
 		.inputrc
-		.aliases
-		.exports
-		.bash_functions
 		.bash_logout
 		.vimrc
 		.gitconfig
