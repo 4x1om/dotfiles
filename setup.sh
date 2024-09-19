@@ -1,7 +1,8 @@
 #!/bin/bash
 
+# This script sets up a development environment on a new machine.
+
 abort() {
-	echo
 	echo "Abort."
 	exit 1
 }
@@ -20,7 +21,16 @@ make_symlinks() {
 	done
 }
 
-without_sudo() {
+ask_question() {
+	read -p "$1 (y/n) " response
+	if [[ "$response" =~ ^[Yy]$ ]]; then
+		echo "yes"
+	else
+		echo "no"
+	fi
+}
+
+setup_dotfiles() {
 	core=(
 		.bashrc
 		.inputrc
@@ -32,95 +42,61 @@ without_sudo() {
 		.gitconfig
 		.lesskey
 	)
-
-	echo "Copying core dotfiles..."
+	echo "Symlinking core dotfiles..."
 	make_symlinks "${core[@]}"
 
-	linux=(
+	linux_input=(
 		.Xmodmap
 		.imwheelrc
 	)
-
-	read -p "Copy Linux input configuration dotfiles? (y/n) " response
-	if [[ "$response" =~ ^[Yy]$ ]]; then
-		make_symlinks "${linux[@]}"
+	copy_linux_input=$(ask_question "Copy Linux input configuration dotfiles?")
+	if [[ $copy_linux_input == "yes" ]]; then
+		make_symlinks "${linux_input[@]}"
 	fi
 }
 
-with_sudo() {
-	sudo apt update
+admin_tasks() {
+	upgrade_apt=$(ask_question "Upgrade apt?")
+	install_base=$(ask_question "Install a basic set of apt programs?")
+	install_nvm=$(ask_question "Download nvm?")
+	install_vim_plug=$(ask_question "Download vim-plug and install vim plugins?")
 
-	read -p "Upgrade apt? (y/n) " response
-	if [[ "$response" =~ ^[Yy]$ ]]; then
+	sudo apt update
+	if [[ $upgrade_apt == "yes" ]]; then
 		sudo apt upgrade -y
 	fi
-
-	base=(
-		neofetch
-		trash-cli
-	)
-
-	read -p "Install a basic set of apt programs? (y/n) " response
-	if [[ "$response" =~ ^[Yy]$ ]]; then
+	if [[ $install_base == "yes" ]]; then
+		base=(
+			neofetch
+			trash-cli
+		)
 		sudo apt install -y ${base[@]}
 	fi
-
-	# Download Node.js from source.
-	# See https://askubuntu.com/a/83290
-	read -p "Download the latest version of Node.js? (y/n) " response
-	if [[ "$response" =~ ^[Yy]$ ]]; then
-		curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-		sudo apt-get install -y nodejs
+	if [[ $install_nvm == "yes" ]]; then
+		curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 	fi
-
-	read -p "Download vim-plug? (y/n) " response
-	if [[ "$response" =~ ^[Yy]$ ]]; then
+	if [[ $install_vim_plug == "yes" ]]; then
 		# Download vim-plug and install plugins.
 		# See https://github.com/junegunn/vim-plug/wiki/tutorial
 		curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
 			https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-		# Enter vim, run :PlugInstall and immediately quit
+		# Enter vim, run :PlugInstall and immediately quit.
 		vim -c PlugInstall -c qa!
-	fi
-
-	# Compile YouCompleteMe. This may take a long time, so an option is offered to skip.
-	# See https://github.com/ycm-core/YouCompleteMe/blob/master/README.md#linux-64-bit
-	read -p "Compile YouCompleteMe now? (y/n) " response
-	if [[ "$response" =~ ^[Yy]$ ]]; then
-		# Install CMake, Vim and Python
-		sudo apt install build-essential cmake vim-nox python3-dev
-
-		# Install mono-complete, go, node, java, and npm
-		sudo mkdir -p /etc/apt/keyrings
-		curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-		echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_current.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
-		sudo apt install mono-complete golang nodejs openjdk-17-jdk openjdk-17-jre npm
-
-		# Compile YCM
-		echo "Compiling YouCompleteMe..."
-		cd ~/.vim/plugged/YouCompleteMe
-		# --force-sudo because YCM compilation normally disallows sudo mode
-		python3 install.py --all --force-sudo
 	fi
 }
 
-echo "This script will make irreversible changes to this machine. Enter your action:"
-echo "su: Set up dev environment assuming you have sudo privileges."
-echo "no: Set up dev environment without sudo privileges."
-read -p "Your choice: " response
+echo "This script sets up a development environment on a new machine."
+echo "The dotfiles on the current machine will be overriden."
+do_continue=$(ask_question "Are you sure you want to continue?")
+if [[ $do_continue == "no" ]]; then
+	abort
+fi
+with_sudo=$(ask_question "Do you have sudo access?")
 
-case $response in
-	no)
-		without_sudo
-		;;
-	su)
-		without_sudo
-		with_sudo
-		;;
-	*)
-		abort
-		;;
-esac
+setup_dotfiles
+if [[ $with_sudo == "yes" ]]; then
+	admin_tasks
+fi
 
 echo "Setup complete."
 exit 0

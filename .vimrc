@@ -1,7 +1,7 @@
 " NOTE: Terminal is unable to distinguish between Ctrl+Key and Ctrl+Shift+Key 
 " as they emit the same key code. Avoid those.
 " See https://stackoverflow.com/questions/1506764/how-to-map-ctrla-and-ctrlshifta-differently
-
+"
 " NOTE: At least on WSL, Terminal is unable to receive <A-Key>'s, and they will
 " be received as <Esc><Key>, which is indistinguishable from typing <Esc> and
 " then <Key>. To check what is sent when you press a hotkey, run `cat -n` and
@@ -9,6 +9,12 @@
 " For this reason, do NOT map <Esc> in any mode to anything lest it interfere
 " with other hotkeys using the escape sequence \e.
 " See https://vi.stackexchange.com/a/2363
+"
+" NOTE: Sometimes on a new Linux installation, there may be startup error that
+" reads 'Sorry, the command is not available in this version.' Try running
+" sudo apt-get install vim-gui-common
+" sudo apt-get install vim-runtime
+" See https://askubuntu.com/q/284957
 
 "
 " Startup Commands
@@ -286,7 +292,7 @@ Plug 'preservim/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'preservim/nerdcommenter'
 Plug 'vim-airline/vim-airline'
-Plug 'ycm-core/YouCompleteMe'
+" Plug 'ycm-core/YouCompleteMe'
 Plug 'kien/ctrlp.vim'
 " post install (yarn install | npm install) then load plugin only for editing supported files
 Plug 'prettier/vim-prettier', {
@@ -311,7 +317,7 @@ colorscheme catppuccin-mocha
 " let g:ycm_auto_hover=''
 " Disable splitting window and showing documentation
 " let g:ycm_disable_signature_help = 1
-set completeopt-=preview
+" set completeopt-=preview
 
 "
 " Settings for NERDTree
