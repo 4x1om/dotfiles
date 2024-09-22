@@ -27,5 +27,9 @@
 	mvb = branch -m
 	cl = clone
 	ls = config --list
+	r = remote
+	ra = remote add
+	f = fetch
+	p = push
 [credential]
 	helper = cache --timeout 43200

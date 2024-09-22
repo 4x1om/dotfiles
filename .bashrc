@@ -246,10 +246,12 @@ dupe() {
 # Dependency: apt sdcv
 see() {
 	query="$*"
-	# The sed command adds 4 spaces before each line
-	sdcv -n --color "$query" -u "Webster's Revised Unabridged Dictionary (1913)" \
-		-u "Collins Cobuild English Dictionary" \
-		-u "WordNet" | sed "s/^/    /" | less -R
+	# sed adds 4 spaces before each line
+	sdcv -n --color "$query" \
+    -u "WordNet" \
+    -u "Collins Cobuild English Dictionary" \
+    -u "Webster's Revised Unabridged Dictionary (1913)" \
+    | sed "s/^/    /" | less -R
 }
 
 # Check synonyms
