@@ -66,6 +66,7 @@ admin_tasks() {
 		base=(
 			neofetch
 			trash-cli
+			sdcv
 		)
 		sudo apt install -y ${base[@]}
 	fi

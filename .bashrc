@@ -200,14 +200,14 @@ cl() {
 	cd "$1" && ls
 }
 
-# `mkdir` then `cl`.
-mkcl() {
-	mkdir "$1" && ls "$1"
-}
-
 # `cd` then `la`.
 ca() {
 	cd "$1" && ls -A
+}
+
+# `mkdir` then `cl`.
+mkcl() {
+	mkdir -p "$1" && cd "$1" && ls
 }
 
 # Create and go to a temporary directory.
@@ -215,7 +215,7 @@ tmp() {
 	cd $(mktemp -d)
 }
 
-# Duplicate file or directory and add a counter at the end.
+# Duplicate file or directory and add a number at the end.
 # If called with 2 parameters, it's equivalent to cp -r.
 dupe() {
 	if [ "$#" -lt 1 ]; then
@@ -251,14 +251,13 @@ see() {
     -u "WordNet" \
     -u "Collins Cobuild English Dictionary" \
     -u "Webster's Revised Unabridged Dictionary (1913)" \
-    | sed "s/^/    /" | less -R
+    | sed "s/^/    /" | less
 }
 
 # Check synonyms
 syn() {
 	query="$*"
-	# The sed command adds 4 spaces before each line
-	sdcv -n --color "$query" -u "Moby Thesaurus II" | sed "s/^/    /" | less -R
+	sdcv -n --color "$query" -u "Moby Thesaurus II" | sed "s/^/    /" | less
 }
 
 # Search on jisho.org
